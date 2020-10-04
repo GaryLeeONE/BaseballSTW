@@ -1,5 +1,6 @@
 # Predicting Baseball Hitter Swing/Take/Whiff
 ORIE 4741 Course Project for FA20
+
 Gary (Hancheng) Li
 
 ### Project Goal
