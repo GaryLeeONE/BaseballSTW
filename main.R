@@ -40,20 +40,23 @@ main <- function() {
         names(testset_full)[ncol(testset_full)] <- "swingtakewhiff"
     }
     
-    
+    set.seed(1)
+    sample_idx <- sample(1:nrow(trainset_full), 10000)
 
     
     cl <- makePSOCKcluster(4)
     registerDoParallel(cl)
 
     ## All subsequent models are then run in parallel
-    # initmodel <- train(swingtakewhiff ~ ., data = data_traintest[1:1000,3:41],
-    #                    method = "rf")
-    
     ctrl <- trainControl(method = "cv", number = 5)
-    initmodel <- train(swingtakewhiff ~ ., data = trainset_full[1:1000,],
-                       trControl = ctrl,
-                       method = "rf")
+    
+    initmodel <<- train(swingtakewhiff ~ ., data = trainset_full[sample_idx,],
+                        trControl = ctrl,
+                        method = "knn",
+                        tuneLength = 10)
+    # initmodel <<- train(swingtakewhiff ~ ., data = trainset_full[sample_idx,],
+    #                    trControl = ctrl,
+    #                    method = "multinom")
 
     ## When you are done:
     stopCluster(cl)
