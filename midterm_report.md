@@ -25,6 +25,20 @@ Finally, I prepared an alternative dataset with the same information, but perfor
 ![Pitch Speed Distribution](./Pics/speeddist.png)
 ![Pitch Spin Rate Distribution](./Pics/spinratedist.png)
 
-## Initial Model
+## Initial Models
 
+For the initial model fitting, I tried out two relatively simple models: K-Nearest Neighbor and Multinomial Logistic Regression. To avoid under- or overfitting, I used the training dataset to train both models and used 5-fold cross validation to estimate the testing error while testing out different values for parameters. Because of limited computing power, I only took a 100,000-row subset of the training set to train the following models, to have a general sense of how the models are performing.
 
+#### KNN Model
+There is only one parameter to tune, which is `k`, the number of nearest neighbors. I tested out 10 different `k` values, with `k=21` being the model with the best CV accuracy at 65.1%. Using this model on the test set yielded a test accuracy rate of 65.3%.
+
+#### Multinomial Logistic Regression
+I used the `multinom` function from the `nnet` package, which is linear multinomial logistic regression. There is only one parameter to tune, which is `decay`, a penalty essentially the same as lambda from l2 regularization. Training the model yields 69.3% CV classification accuracy with `decay=0.1`, which is better than the KNN model. Using this model on the hold out test set produced an accuracy of 69.04%.
+
+## Next Steps
+Going forward with the project, there are a few things I plan to do:
+* Figure out better ways to represent hitter tendency: there are some players with very few plate appearances, so the swing/take/whiff percentages might be very rough and inaccurate. Shall I include them in the dataset or not? I will have to test to find out.
+* Build multiple different models with different subsets of columns selected and compare. This way, I can understand how including (or not including) different factors influence the quality of the model.
+* Build a more complex and robust model using the XGBoost algorithm, and fine tune the model by testing out multiple different combinations of parameters.
+* Dig deeper to analyze the results by investigating the following: How are the models performing on different classes? Is the accuracy rate for one class noticeably better/worse than another? How is the model performing for different pitch types, or different locations around the strike zone?
+* Based on the previous questions, make pretty plots to visualize the results.
