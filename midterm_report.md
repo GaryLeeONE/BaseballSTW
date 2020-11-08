@@ -9,7 +9,7 @@ The goal of this project is to predict whether a hitter in Major League Baseball
 This project primarily uses R v4.0.3 as the coding language.
 
 ## Dataset Preparation
-The original dataset is obtained from the [Baseball Savant](https://baseballsavant.mlb.com/) website using its powerful Statcast search feature. This dataset is maintained by Major League Baseball R&D Department, and contains detailed play-by-play information from the 2017 to 2019 MLB Seasons (Regular Season and Postseason). Each row corresponds to a single pitch thrown, while the columns contain information such as player IDs, player handedness, pitch type, pitch location, pitch velocity, spin rate, batted ball type, and other numeric, nominal or descriptive variables. The full list of variables are listed [here](https://baseballsavant.mlb.com/csv-docs). The original dataset is loaded into the R environment using the `baseballr` package developed by Bill Petti ([link](http://billpetti.github.io/baseballr/)), and contains 2,207,255 rows and 86 columns.
+The original dataset is obtained from the [Baseball Savant](https://baseballsavant.mlb.com/) website using its powerful Statcast search feature. This dataset is maintained by Major League Baseball R&D Department, and contains detailed play-by-play information from the 2019 MLB Regular Season. Each row corresponds to a single pitch thrown, while the columns contain information such as player IDs, player handedness, pitch type, pitch location, pitch velocity, spin rate, batted ball type, and other numeric, nominal or descriptive variables. The full list of variables are listed [here](https://baseballsavant.mlb.com/csv-docs). The original dataset is loaded into the R environment using the `baseballr` package developed by Bill Petti ([link](http://billpetti.github.io/baseballr/)), and contains 2,207,255 rows and 86 columns.
 
 The dataset is well maintained with very few data quality issues. For the data cleaning process, I removed several deprecated columns including `spin_dir`, `break_angle_deprecated`, etc., corresponding to metrics that are no longer tracked and used. I also removed columns that I believe are irrelevant to the prediction, including `des` (which is the full description of each play, such as "Mike Trout homers (1) on a fly ball to center field"), and `umpire` (which is supposed to be the home plate umpire but the entire column is empty). Apart from this, the only issue I found with the dataset is that there are some pitches that were thrown with 3 outs already recorded in the inning, which is impossible to happen based on the rules of the game (if 3 outs have already been recorded then the inning immediately stops, any pitch can only be thrown with 0, 1, or 2 outs recorded). I removed these rows from the dataset. The processed dataset now has 1,651,065 rows and 41 columns.
 
@@ -25,4 +25,6 @@ Finally, I prepared an alternative dataset with the same information, but perfor
 ![Pitch Speed Distribution](./Pics/speeddist.png)
 ![Pitch Spin Rate Distribution](./Pics/spinratedist.png)
 
-I will be using different classification methods to produce multiple models, including Nearest-Neighbors and tree-based methods such as random forest and XGBoost. I also plan to build different models using different subsets of the predictors, and compare the accuracy between them.
+## Initial Model
+
+
