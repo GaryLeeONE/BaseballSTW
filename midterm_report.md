@@ -17,8 +17,12 @@ Next, I coded the response variable column ("swing", "take", or "whiff") using t
 
 ![Swing Take Whiff Distribution](./Pics/stwdist.png)
 
-Finally, to capture the "hitting tendency" of the hitter, I performed data manipulation on the current dataset to obtain information about the historical swing/take/whiff percentages for each hitter in each zone. The `zone` column in the dataset is a column with integral values from 1 to 14, corresponding to 
+Additionally, to capture the "hitting tendency" of the hitter, I performed data manipulation on the current dataset to obtain information about the historical swing/take/whiff percentages for each hitter in each zone. The `zone` column in the dataset is a column with integral values from 1 to 14, corresponding to 14 sections within and around the strike zone (as seen in this [zone chart](./Pics/zone.png)). I grouped by different players and aggregated their performances for each zone, for example, a player has a 0.543 swing rate, 0.348 take rate, and 0.109 whiff rate in zone 1. This information is added as additional columns to the dataset and used as predictors.
 
-Because the dataset contains information of every single pitch thrown, I first processed the dataset to find the tendency of each hitter, including the percentage of pitches he swung at/took/whiffed at. I will also select the columns that are helpful towards the prediction, and code them into appropriate forms for different algorithms.
+Finally, I prepared an alternative dataset with the same information, but performed one-hot encoding on the categorical variables, as well as standardizing all the columns for them to have mean 0 and variance 1. This alternative dataset has 67 columns and is used for specific algorithms that require only numeric columns and standardized values. I also divided the dataset into a 80%-20% training-test split using the `createDataPartition` function from the `caret` package. Data pre-processing is complete at this point.
+
+*Below are the histogram plots for pitch speed and pitch spin rate from the processed dataset, two of the very important factors in determining swing/take/whiff behavior, based on previous sabermetric analyses.*
+![Pitch Speed Distribution](./Pics/speeddist.png)
+![Pitch Spin Rate Distribution](./Pics/spinratedist.png)
 
 I will be using different classification methods to produce multiple models, including Nearest-Neighbors and tree-based methods such as random forest and XGBoost. I also plan to build different models using different subsets of the predictors, and compare the accuracy between them.
