@@ -6,9 +6,13 @@ Gary (Hancheng) Li
 ![Whiff](./Pics/whiff.jpg)
 
 ## Project Overview
+
+*For readers not familiar with baseball, please scroll down to the bottom of the report for a quick explanation of baseball pitching and hitting.*
+
 The goal of this project is to predict whether a hitter in Major League Baseball will swing (and make contact), take (doesn't swing), or whiff (swing and miss) at a certain pitch, based on the hitter's hitting tendencies, the pitch characteristics, as well as the game situation (number of outs in an inning, number of runners on base). Ideally, I hope to build a model that can suggest to the pitcher what types of pitches to use against a certain hitter, as well as finding out the most important factors that influence swing/take/miss which can help with prospect scouting and development.
 
 This project primarily uses R v4.0.3 as the coding language.
+
 
 ## Dataset Preparation
 
@@ -37,9 +41,9 @@ I produced the following plots to explore the dataset.
 
 ### Class Distribution
 
-The first thing I decided to look at was the distribution of the 3 classes. I created the following plot based on the different "[zones](./Pics/zone.png)" around the strike zone. It is obvious from the plot below that within the strike zone (zones 1 to 9)
+The first thing I decided to look at was the distribution of the 3 classes. I created the following plot based on the different "[zones](./Pics/zone.png)" around the strike zone. It is obvious from the plot below that the three classes are not evenly distributed. Overall, about 50% of the pitches are taken, then 40% of the pitches are swung at and contact was made, only around 10% are swings-and-misses.
 
-![Swing-Take-Whiff Class Distribution](./Pics/stwdist.png)
+![Swing-Take-Whiff Class Distribution](./Pics/stwdist_byzone.png)
 
 ### Regarding Pitch Location
 
@@ -66,10 +70,11 @@ I also made similar plots for horizontal and vertical movement of the pitch. The
 
 
 
+## Model Results Analyses
 
-## Next Steps
-Going forward with the project, there are a few things I plan to do:
-* Build multiple different models with different subsets of columns selected and compare. This way, I can understand how including (or not including) different factors influence the quality of the model.
-* Build a more complex and robust model using the XGBoost algorithm, and fine tune the model by testing out multiple different combinations of parameters.
-* Dig deeper to analyze the results by investigating the following: How are the models performing on different classes? Is the accuracy rate for one class noticeably better/worse than another? How is the model performing for different pitch types, or different locations around the strike zone?
-* Based on the previous questions, make pretty plots to visualize the results.
+
+
+## Quick Explanation for Readers Not Familiar with Baseball
+In baseball, the pitcher is on the defensive side. He throws the baseball to the hitter (this motion is called a "pitch"). The hitter (also called "batter") is on the offensive side and tries to hit the pitch. The pitcher will use many different types of pitches with different velocity and curve to trick the hitter, because swing-and-miss (also called "whiff") will benefit the defense. The hitter tries to hit a pitch into the playing field to create scoring opportunities, which benefits the offense.
+
+The hitter taking a pitch means that he does not swing at the pitch. However, he can only take a limited number of pitches each time he comes up to hit. Hitters taking pitches can be beneficial to either the offense or the defense depending on the location of the pitches thrown. If a pitch is taken within the "strike zone", which is zones 1 to 9 in the [zone chart](./Pics/zone.png), it benefits the defense; if it's outside of the strike zone (zones 11 to 14), it benefits the offense.
