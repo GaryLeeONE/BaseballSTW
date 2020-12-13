@@ -64,11 +64,34 @@ As shown above, we can see the swing-and-miss rate for both types of pitches is 
 
 I also made similar plots for horizontal and vertical movement of the pitch. They tell a similar story: more horizontal/vertical movement leads to more swing-and-misses. To save space I'll not show them directly in the report, but here are the links: [4-Seam Fastball Movement](./Pics/4sfbmove.png), [Curveball Movement](./Pics/cumove.png).
 
+## Model Fitting
 
-## Initial Models
+For this project, I decided to use two different models, one is a relatively simple model learned in class, and the other one is a more complex and powerful model that achieves good prediction accuracy.
 
+### Support Vector Machines
 
+I first tried out the one-vs-all Support Vector Machines model. Support Vector Machines use Hinge loss and L2 regularization to construct a soft boundary and classify the different classes. Based on the previous exploratory analyses, we can roughly see that swing/take/whiff behavior has apparent non-linear characteristics, so I decided to use an SVM with a Radial basis function kernel. The fitting process is completed using the `caret` package and setting the training method to be `svmRadial`, also requiring the package `kernlab` for the SVM algorithm.
 
+There are two parameters that requires tuning, which are `sigma` which affects the kernel functions and controls the smoothness of the decision boundary, and `Cost` which is essentially the regularization constant. I used 5-fold cross validation and tested out 12 combinations of these two parameters, and found that a combination of `sigma` = 1e-6 and `Cost` = 40 produces the best model, with an training accuracy of 57.4%, and a CV estimated test accuracy of 53.9%. Testing this model on the hold out test set yields a test accuracy of 54.3%, which is close to the estimated test accuracy but not very satisfactory.
+
+### XGBoost
+
+Apparently the SVM Classification doesn't predict very well, so I decided to fit a more complex and powerful model which is [XGBoost](https://xgboost.readthedocs.io/en/latest/R-package/index.html), a tree-ensemble algorithm.
+
+The algorithm requires setting the algorithm objective and evaluation metrics. For this problem, I set the objective to be "multi:softmax", which means it's a multiclass classification problem, there's a soft boundary, and the prediction only returns the class with the maximum probability. I set the evaluation metric to be "mlogloss" which stands for multiclass (one-vs-all) logistic loss.
+
+There are a number of parameters that require tuning, among them I selected the following ones that I believe is relatively important:
+
+- `lambda`, the L2 regularization term on the weights.
+- `gamma`, the minimum loss reduction required to make a further partition on a leaf node of the tree.
+- `subsample`, the subsample ratio of the training instances. If this value is 0.7, then only a random 70% = 0.7 of the **rows** in the training set, instead of the entire training set, would be used to fit each tree.
+- `colsample_bytree`, the subsample ratio of the predictor columns. If this value is 0.7, then only a random 70% = 0.7 of the **columns** (predictors) in the training set, instead of all predictors, would be used to fit each tree. This is similar to random forests where the algorithm tries to reduce the correlation between predictors.
+- `max_depth`, the maximum depth of each tree in the ensemble. If this is set too large, it could lead to overfit and aggressive consumption of system memory.
+- `min_child_weight`, the minimum sum of instance weight needed in a child. This controls the relative size of each of the leaf nodes of a tree. If this is set too large, the trees are unable to make many splits and could lead to underfit.
+
+There are two other parameters that control the fitting process but aren't in the combinations: the learning rate `eta` and the max number of trees `ntrees`. I set `eta` = 0.1 for the fitting process to be relatively quick but not too aggressive to affect quality. I set a very large `ntrees` but uses the algorithm's "early stopping rounds" feature to prevent overfitting: if the cross validation evaluation metric doesn't improve as the fitting continues, the fitting would automatically stop so the model generalizes and doesn't overfit.
+
+I used 5-fold cross validation to test out more than 100 different combinations of the parameters above, and found that a combination of `lambda` = 10, `gamma` = 0.9, `subsample` = 0.8, `colsample_bytree` = 0.65, `max_depth` = 5, and `min_child_weight` = 3 to be the best model, having a training mlogloss value of 0.484795. Testing this model on the hold out test set yields a test accuracy of 75.7%, a massive increase over the SVM model.
 
 ## Model Results Analyses
 
