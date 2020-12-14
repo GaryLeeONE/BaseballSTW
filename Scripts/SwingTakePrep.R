@@ -81,9 +81,16 @@ generate_traintest <- function(df, tendency) {
                 on_1b = !is.na(on_1b) ) %>%
         select( -bat_score, -fld_score ) %>%
         filter( complete.cases(.) & n.byzone >= 20 ) %>%
-        mutate( swingtakewhiff = as.factor(swingtakewhiff) )
+        mutate( swingtakewhiff = as.factor(swingtakewhiff) ) 
     
     temp$pitch_name <- factor(temp$pitch_name)
+    
+    temp <- temp %>% filter(pitch_name != "null",
+               if_fielding_alignment != "null",
+               of_fielding_alignment != "null") %>%
+        droplevels()
+    
+    names(temp) <- make.names(names(temp))
     
     return(temp)
 }
@@ -92,7 +99,10 @@ generate_ohe <- function(df) {
     
     temp <- df %>%
         select(-sv_id, -batter, -zone,
-               -home_team, -away_team )
+               -home_team, -away_team ) %>%
+        mutate(count = paste(balls, strikes, sep = "_")) %>%
+        select(-balls, -strikes)
+        
     
     # temp$stand <- model.matrix( ~ stand - 1, data = temp)
     # temp$p_throws <- model.matrix( ~ p_throws - 1, data = temp)
@@ -112,12 +122,53 @@ generate_ohe <- function(df) {
     
     dummies <- dummyVars( ~ .,
                          data = temp %>%
-                             select(-swingtakewhiff))
+                             select(-swingtakewhiff),
+                         fullRank = TRUE)
     data_traintest_ohe <- predict(dummies, newdata = temp %>%
                                       select(-swingtakewhiff))
     data_traintest_ohe <- cbind(data_traintest_ohe, tempstw)
     
+    names(data_traintest_ohe) <- make.names(names(data_traintest_ohe))
+    
     return(as_tibble(data_traintest_ohe))
     
     
+}
+
+
+generate_split <- function(df) {
+    
+    message("Start partitioning data")
+    
+    set.seed(1)
+    train_ind <- createDataPartition(df$swingtakewhiff,
+                                     p = 0.8, list = FALSE)
+    
+    trainset <<- as_tibble(df[train_ind, ]) %>%
+        select(-swingtakewhiff)
+    testset <<- as_tibble(df[-train_ind, ]) %>%
+        select(-swingtakewhiff)
+    
+    message("Start scaling data")
+    
+    trainset_colmeans <- apply(trainset, 2, mean)
+    trainset_colsd <- apply(trainset, 2, sd)
+    
+    trainset_scaled <<- scale(trainset)
+    testset_scaled <<- scale(testset, center = trainset_colmeans, scale = trainset_colsd)
+    
+    train.stw <<- as.factor(df$swingtakewhiff[train_ind])
+    test.stw <<- as.factor(df$swingtakewhiff[-train_ind])
+    
+    trainset_scaled_full <- cbind(as_tibble(trainset_scaled), as.character(train.stw))
+    testset_scaled_full <- cbind(as_tibble(testset_scaled), as.character(test.stw))
+    
+    names(trainset_scaled_full)[ncol(trainset_scaled_full)] <- "swingtakewhiff"
+    names(testset_scaled_full)[ncol(testset_scaled_full)] <- "swingtakewhiff"
+    # 
+    # trainset_scaled_full$swingtakewhiff <- as.factor(trainset_scaled_full$swingtakewhiff)
+    # testset_scaled_full$swingtakewhiff <- as.factor(testset_scaled_full$swingtakewhiff)
+    
+    trainset_scaled_full <<- as_tibble(trainset_scaled_full)
+    testset_scaled_full <<- as_tibble(testset_scaled_full)
 }
