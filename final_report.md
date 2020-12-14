@@ -5,7 +5,7 @@ Gary (Hancheng) Li
 
 ![Whiff](./Pics/whiff.jpg)
 
-**Pages: 8 + 1 extra (as organized in final.docx which is also included in the repo), Word Count: 12**
+**Pages: 8 + 1 extra (as organized in final.docx which is also included in the repo), Word Count: 2621**
 
 ## Project Overview
 
