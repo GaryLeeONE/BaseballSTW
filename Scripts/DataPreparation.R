@@ -15,20 +15,18 @@ init <- function() {
     require(doParallel)
     require(e1071)
     require(nnet)
+    require(MLmetrics)
+    require(Matrix)
+    require(scales)
+    require(kernlab)
     
 }
 
 dldata <- function(write_to_file = FALSE) {
     
-    listofdates <- c(seq.Date(from = ymd("2017-03-15"),
-                              to = ymd("2017-11-01"),
-                              by = 5),
-                     seq.Date(from = ymd("2018-03-15"),
-                              to = ymd("2018-11-01"),
-                              by = 5),
-                     seq.Date(from = ymd("2019-03-15"),
+    listofdates <- seq.Date(from = ymd("2019-03-15"),
                               to = ymd("2019-11-01"),
-                              by = 5))
+                              by = 5)
     
     # listofdates <- c(seq.Date(from = ymd("2017-03-15"),
     #                           to = ymd("2017-05-01"),
