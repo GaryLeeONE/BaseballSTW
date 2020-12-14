@@ -5,11 +5,11 @@ Gary (Hancheng) Li
 
 ![Whiff](./Pics/whiff.jpg)
 
-**Pages: 8 + 1 extra (as organized in final.docx which is also included in the repo), Word Count: 2621**
+**Pages: 8 + 1 extra (as organized in [final.docx](./final.docx)), Word Count: 2621**
 
 ## Project Overview
 
-*For readers not familiar with baseball, please scroll down to the bottom of the report for a quick explanation of baseball pitching and hitting.*
+*For readers not familiar with baseball, please scroll down to the bottom of the report for a [quick explanation of baseball pitching and hitting](#extra-quick-explanation-for-readers-not-familiar-with-baseball).*
 
 The goal of this project is to predict whether a hitter in Major League Baseball will swing (and make contact), take (doesn't swing), or whiff (swing and miss) at a certain pitch, based on the hitter's hitting tendencies, the pitch characteristics, as well as the game situation (number of outs in an inning, number of runners on base). Ideally, I hope to build a model that can suggest to the pitcher what types of pitches to use against a certain hitter, as well as finding out the most important factors that influence swing/take/miss which can help with prospect scouting and development.
 
